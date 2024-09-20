@@ -22,6 +22,12 @@ export class AppComponent {
     this.groupRuleTypes = Object.keys(this.ruleGroups);
     console.log(this.groupRuleTypes);
 
+    
+    this.groupRuleTypes.forEach((key) => {
+      this.ruleGroups[key].forEach((rule) => {
+        rule.form_config = typeof(rule.form_config)==="string" ? JSON.parse(rule.form_config) : null
+      })
+    })
 
     
 
