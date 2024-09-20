@@ -25,7 +25,9 @@ export interface RuleGroupTableStructure {
   rule_group_name: string
   show_ui: number
   apply_rule: number
-  created_by:number
+  created_by: number
+  disable_rule:number
+  user:string
   created_date: string
   modified_date:string
 }
