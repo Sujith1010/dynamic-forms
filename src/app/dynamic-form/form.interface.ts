@@ -33,7 +33,7 @@ modified_date:string
 export interface UWRuleTableStructure {
 uw_rule_id: number
 uw_rule_group_id :number
-form_config: ISingleInputStructure[]
+form_config: string
 form_name:string
 evaluation: any //SHOULD CHANGE
 show_ui: number

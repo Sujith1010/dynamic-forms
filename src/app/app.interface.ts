@@ -54,7 +54,7 @@ export interface ISingleInputStructure {
     export interface UWRuleTableStructure {
     uw_rule_id: number
     uw_rule_group_id :number
-    form_config: ISingleInputStructure[]
+    form_config: string
     form_name:string
     evaluation: any //SHOULD CHANGE
     show_ui: number
@@ -64,5 +64,6 @@ export interface ISingleInputStructure {
     factor: string
     created_by: string|number
     created_date: string
-    modified_date:string
+          modified_date: string
+          group_name:string
     }

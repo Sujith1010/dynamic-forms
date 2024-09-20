@@ -1,8 +1,36 @@
-<div *ngFor = "let ruleTitle of groupRuleTypes">
-  <h2>{{ruleTitle}}</h2>
-  <div *ngFor = "let formRules of ruleGroups[ruleTitle]">
-    <!-- <div *ngFor = "let formConfig of formRules.formConfig" *ngSwitch="formConfig.type">
-    </div> -->
-  </div>
+<div *ngFor="let ruleTitle of groupRuleTypes">
+  <h2>{{ ruleTitle }}</h2>
+  <div *ngFor="let formRules of ruleGroups[ruleTitle]">
+    <form [formGroup]="dynamicForms[formRules.uw_rule_group_id]" (ngSubmit)="onSubmit(formRules.uw_rule_group_id)">
+      <div *ngFor="let formConfig of formRules.form_config">
+        <div *ngIf="['text', 'number', 'textarea', 'radio', 'select'].includes(formConfig.type)">
+          <label>{{ formConfig.label }}</label>
 
+          <input *ngIf="formConfig.type !== 'textarea' && formConfig.type !== 'radio' && formConfig.type !== 'select'"
+                 [type]="formConfig.type"
+                 class="form-control"
+                 [formControlName]="formConfig.name" />
+
+          <textarea *ngIf="formConfig.type === 'textarea'"
+                    class="form-control"
+                    [formControlName]="formConfig.name"></textarea>
+
+          <div *ngIf="formConfig.type === 'radio'">
+            <div *ngFor="let option of formConfig.options">
+              <label>
+                <input type="radio" [value]="option.value" [formControlName]="formConfig.name" />
+                {{ option.label }}
+              </label>
+            </div>
+          </div>
+
+          <select *ngIf="formConfig.type === 'select'" [formControlName]="formConfig.name" class="form-control">
+            <option *ngFor="let option of formConfig.options" [value]="option.value">{{ option.label }}</option>
+          </select>
+
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 </div>
