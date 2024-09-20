@@ -1,6 +1,9 @@
 <div *ngFor = "let ruleTitle of groupRuleTypes">
-  <!-- <div *ngFor = "let formRules of ruleGroups[ruleTitle]"> -->
-
-  <!-- </div> -->
+  <h2>{{ruleTitle}}</h2>
+  <div *ngFor = "let formRules of ruleGroups[ruleTitle]">
+    <div>
+      {{formRules.form_name}}
+    </div>
+  </div>
 
 </div>

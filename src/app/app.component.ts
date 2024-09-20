@@ -10,12 +10,13 @@ import { IruleParent, RuleGroup } from './app.interface';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  ruleGroups!:IruleParent[];
+  ruleGroups!:IruleParent;
   groupRuleTypes :string[] = []
   constructor(private apiService:ApiService ) {}
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall("group-rule/josndriven");
-    this.ruleGroups = _.groupBy(apiResponse.response, "group_name") as unknown as IruleParent[]
+    console.log(apiResponse.response)
+    this.ruleGroups = _.groupBy(apiResponse.response, "group_name") as IruleParent
 
     console.log("ruleGroups", this.ruleGroups)
     this.groupRuleTypes = Object.keys(this.ruleGroups);
