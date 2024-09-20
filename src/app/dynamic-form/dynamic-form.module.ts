@@ -10,6 +10,9 @@ import { DynamicFormComponent } from './dynamic-form.component';
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    DynamicFormComponent
   ]
 })
 export class DynamicFormModule { }

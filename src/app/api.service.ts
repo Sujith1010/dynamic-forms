@@ -19,9 +19,9 @@ export class ApiService {
   }
 
 
-  async getApiCall(url: string, params: any): Promise<any> {
+  async getApiCall(url: string, params?: any): Promise<any> {
     try {
-      let response = await this.axios.get(url);
+      let response = await this.axios.get(`${this.apiUrl}/${url}`);
       return response["data"];
     } catch (exception:any) {
             throw exception;

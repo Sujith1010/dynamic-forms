@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RuleGroupTableStructure } from './form.interface';
-
+import { ApiService } from '../api.service';
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -8,9 +8,10 @@ import { RuleGroupTableStructure } from './form.interface';
 })
 export class DynamicFormComponent implements OnInit {
   ruleGroups:RuleGroupTableStructure[] = []
-  constructor() { }
+  constructor(private apiService:ApiService ) {}
   async ngOnInit() {
-    
+    this.ruleGroups = await this.apiService.getApiCall("group-rule/josndriven");
+    console.log("ruleGroups", this.ruleGroups)
   }
 
 }
