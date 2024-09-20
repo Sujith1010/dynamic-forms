@@ -1,9 +1,8 @@
 <div *ngFor = "let ruleTitle of groupRuleTypes">
   <h2>{{ruleTitle}}</h2>
   <div *ngFor = "let formRules of ruleGroups[ruleTitle]">
-    <div>
-      {{formRules.form_name}}
-    </div>
+    <!-- <div *ngFor = "let formConfig of formRules.formConfig" *ngSwitch="formConfig.type">
+    </div> -->
   </div>
 
 </div>

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ApiService } from './api.service';
-import { RuleGroupTableStructure } from './dynamic-form/form.interface';
+import { ISingleInputStructure, RuleGroupTableStructure } from './dynamic-form/form.interface';
 import * as _ from "lodash";
 import { IruleParent, RuleGroup } from './app.interface';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,12 @@ import { IruleParent, RuleGroup } from './app.interface';
 })
 export class AppComponent {
   ruleGroups!:IruleParent;
-  groupRuleTypes :string[] = []
-  constructor(private apiService:ApiService ) {}
+  groupRuleTypes: string[] = []
+  formStructure: ISingleInputStructure[] = [];
+  dynamicForm: FormGroup = this.fb.group({});
+  constructor(private apiService: ApiService, private fb: FormBuilder) { }
+  
+
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall("group-rule/josndriven");
     console.log(apiResponse.response)
@@ -25,7 +30,26 @@ export class AppComponent {
     
     this.groupRuleTypes.forEach((key) => {
       this.ruleGroups[key].forEach((rule) => {
-        rule.form_config = typeof(rule.form_config)==="string" ? JSON.parse(rule.form_config) : null
+        rule.form_config = typeof (rule.form_config) === "string" ? JSON.parse(rule.form_config) : null
+        // rule.form_config.forEach((control) => {
+        //   let controlValidators: Validators[] = [];
+    
+        //   if (control.validations) {
+        //     ``;
+        //     control.validations.forEach(
+        //       (validation: {
+        //         name: string;
+        //         validator: string;
+        //         message: string;
+        //       }) => {
+        //         if (validation.validator === 'required')
+        //           controlValidators.push(Validators.required);
+        //         if (validation.validator === 'email')
+        //           controlValidators.push(Validators.email);
+        //         // Add more built-in validators as needed
+        //       }
+        //     );
+        //   }
       })
     })
 
