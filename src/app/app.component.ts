@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from './api.service';
 import { RuleGroupTableStructure } from './dynamic-form/form.interface';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-root',
@@ -8,11 +9,15 @@ import { RuleGroupTableStructure } from './dynamic-form/form.interface';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  ruleGroups:RuleGroupTableStructure[] = []
+  ruleGroups = {}
   constructor(private apiService:ApiService ) {}
   async ngOnInit() {
-    this.ruleGroups = await this.apiService.getApiCall("group-rule/josndriven");
+    let apiResponse = await this.apiService.getApiCall("group-rule/josndriven");
+    this.ruleGroups = _.groupBy(apiResponse.response, "group_name")
+
     console.log("ruleGroups", this.ruleGroups)
+
+
   }
 
 }

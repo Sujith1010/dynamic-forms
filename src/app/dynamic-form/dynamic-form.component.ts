@@ -6,12 +6,12 @@ import { ApiService } from '../api.service';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.css']
 })
-export class DynamicFormComponent implements OnInit {
-  ruleGroups:RuleGroupTableStructure[] = []
-  constructor(private apiService:ApiService ) {}
-  async ngOnInit() {
-    this.ruleGroups = await this.apiService.getApiCall("group-rule/josndriven");
-    console.log("ruleGroups", this.ruleGroups)
-  }
+export class DynamicFormComponent  {
+  // ruleGroups:RuleGroupTableStructure[] = []
+  // constructor(private apiService:ApiService ) {}
+  // async ngOnInit() {
+  //   this.ruleGroups = await this.apiService.getApiCall("group-rule/josndriven");
+  //   console.log("ruleGroups", this.ruleGroups)
+  // }
 
 }
