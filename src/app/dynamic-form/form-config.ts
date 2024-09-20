@@ -1,6 +1,6 @@
-import { IFormStructure } from './form.interface';
+import { ISingleInputStructure } from './form.interface';
 
-export const formConfig: IFormStructure[] = [
+export const formConfig: ISingleInputStructure[] = [
   {
     type: 'text',
     label: 'Name',
