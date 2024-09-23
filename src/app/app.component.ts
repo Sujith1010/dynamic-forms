@@ -39,8 +39,8 @@ export class AppComponent {
     // console.log("ruleGroups----------->",this.ruleGroups)
 
     this.groupRuleTypes.forEach((key) => {
-      let formGroup: Record<string, any> = {};
       this.ruleGroups[key].forEach((rule: UWRuleTableStructure) => {
+        let formGroup: Record<string, any> = {};
         rule.form_config = JSON.parse(rule.form_config);
         if (Array.isArray(rule.form_config)) {
           rule.form_config.forEach((control) => {
@@ -65,7 +65,6 @@ export class AppComponent {
           this.dynamicForms[rule.uw_rule_id] = this.fb.group(formGroup);
         }
       });
-      formGroup={}
     });
     this.transformedRuleGroups = this.ruleGroups;
     console.log('dynamicForm', this.dynamicForms);
