@@ -69,7 +69,7 @@ export interface ISingleInputStructure {
     }
 
 
-    interface UpdateJsonFormValue {
+    export interface UpdateJsonFormValue {
         groupRuleId: string | number;  
         uwRuleId: string | number;
         previousValue: string;           

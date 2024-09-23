@@ -5,7 +5,7 @@ import {
   RuleGroupTableStructure,
 } from './dynamic-form/form.interface';
 import * as _ from 'lodash';
-import { IruleParent, RuleGroup, UWRuleTableStructure } from './app.interface';
+import { IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -86,19 +86,20 @@ export class AppComponent {
     return '';
   }
 
-  onSubmit(ruleId: number) {
+ async onSubmit(ruleId: number) {
     console.log(this.JsonResponse.response, ruleId);
     const form = this.dynamicForms[ruleId];
     let previousJsonData:UWRuleTableStructure[]= this.JsonResponse?.response.filter((jsonData:UWRuleTableStructure)=>jsonData.uw_rule_id ==ruleId)
     if (form.valid&&previousJsonData.length) {
-      let updateJsonFormValue = {
+      let updateJsonFormValue:UpdateJsonFormValue = {
         groupRuleId:previousJsonData[0].uw_rule_group_id,
         uwRuleId:previousJsonData[0].uw_rule_id,
         previousValue:JSON.stringify(previousJsonData[0].form_config),
         updatedData:JSON.stringify(form.value),
         updatedBy:"sujith"
       }
-      console.log("upated values------->",updateJsonFormValue)
+     await this.apiService.putApiCall("group-rule/update-rule-group",updateJsonFormValue);
+     alert("updated successfully")
     } else {
       console.log('Form is invalid');
     }
