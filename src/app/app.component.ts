@@ -19,11 +19,15 @@ export class AppComponent {
   formStructure: ISingleInputStructure[] = [];
   dynamicForms: Record<string, FormGroup> = {}; // Dictionary to hold forms
   transformedRuleGroups: IruleParent = {};
+  JsonResponse:any;
   constructor(private apiService: ApiService, private fb: FormBuilder) {}
+
+
 
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall('group-rule/josndriven');
-    console.log(apiResponse.response);
+    // console.log(apiResponse.response);
+    this.JsonResponse =apiResponse;
     this.ruleGroups = _.groupBy(
       apiResponse.response,
       'group_name'
@@ -31,7 +35,8 @@ export class AppComponent {
 
     console.log('ruleGroups', this.ruleGroups);
     this.groupRuleTypes = Object.keys(this.ruleGroups);
-    console.log(this.groupRuleTypes);
+    // console.log("group rules-------->",this.groupRuleTypes);
+    // console.log("ruleGroups----------->",this.ruleGroups)
 
     this.groupRuleTypes.forEach((key) => {
       let formGroup: Record<string, any> = {};
@@ -40,8 +45,7 @@ export class AppComponent {
         if (Array.isArray(rule.form_config)) {
           rule.form_config.forEach((control) => {
             let controlValidators: Validators[] = [];
-            if (control.validations) {
-              ``;
+            if (control.validations) { 
               control.validations.forEach(
                 (validation: {
                   name: string;
@@ -52,14 +56,13 @@ export class AppComponent {
                     controlValidators.push(Validators.required);
                   if (validation.validator === 'email')
                     controlValidators.push(Validators.email);
-                  // Add more built-in validators as needed
                 }
               );
             }
             formGroup[control.name] = [control.value || '', controlValidators];
           });
 
-          this.dynamicForms[rule.uw_rule_group_id] = this.fb.group(formGroup);
+          this.dynamicForms[rule.uw_rule_id] = this.fb.group(formGroup);
         }
       });
       formGroup={}
@@ -84,9 +87,18 @@ export class AppComponent {
   }
 
   onSubmit(ruleId: number) {
+    console.log(this.JsonResponse.response, ruleId);
     const form = this.dynamicForms[ruleId];
-    if (form.valid) {
-      console.log('Form Submitted:', form.value);
+    let previousJsonData:UWRuleTableStructure[]= this.JsonResponse?.response.filter((jsonData:UWRuleTableStructure)=>jsonData.uw_rule_id ==ruleId)
+    if (form.valid&&previousJsonData.length) {
+      let updateJsonFormValue = {
+        groupRuleId:previousJsonData[0].uw_rule_group_id,
+        uwRuleId:previousJsonData[0].uw_rule_id,
+        previousValue:JSON.stringify(previousJsonData[0].form_config),
+        updatedData:JSON.stringify(form.value),
+        updatedBy:"sujith"
+      }
+      console.log("upated values------->",updateJsonFormValue)
     } else {
       console.log('Form is invalid');
     }

@@ -1,8 +1,8 @@
 <div *ngFor="let ruleTitle of groupRuleTypes">
   <h2>{{ ruleTitle }}</h2>
   <div *ngFor="let formRules of ruleGroups[ruleTitle]">
-    <form [formGroup]="dynamicForms[formRules.uw_rule_group_id]" (ngSubmit)="onSubmit(formRules.uw_rule_group_id)">
-      <div *ngFor="let formConfig of formRules.form_config">
+    <form [formGroup]="dynamicForms[formRules.uw_rule_id]" (ngSubmit)="onSubmit(formRules.uw_rule_id)">
+      <div *ngFor="let formConfig of formRules.form_config; let i = index">
         <div *ngIf="['text', 'number', 'textarea', 'radio', 'select'].includes(formConfig.type)">
           <label>{{ formConfig.label }}</label>
 

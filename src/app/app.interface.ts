@@ -67,3 +67,12 @@ export interface ISingleInputStructure {
           modified_date: string
           group_name:string
     }
+
+
+    interface UpdateJsonFormValue {
+        groupRuleId: string | number;  
+        uwRuleId: string | number;
+        previousValue: string;           
+        updatedData: string;             
+        updatedBy: string;
+      }
