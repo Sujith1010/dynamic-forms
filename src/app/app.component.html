@@ -1,5 +1,8 @@
 <div *ngFor="let ruleTitle of groupRuleTypes">
   <h2>{{ ruleTitle }}</h2>
+  <button (click)="ruleStatusChange(ruleTitle, null, 'disable')"> Disable Group</button>
+  <button (click)="ruleStatusChange(ruleTitle, null, 'enable')"> Enable Group</button>
+
   <div *ngFor="let formRules of ruleGroups[ruleTitle]">
     <form [formGroup]="dynamicForms[formRules.uw_rule_id]" (ngSubmit)="onSubmit(formRules.uw_rule_id)">
       <div *ngFor="let formConfig of formRules.form_config; let i = index">
@@ -30,6 +33,9 @@
 
         </div>
       </div>
+      <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'disable')">Disable Rule</button>
+      <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'enable')">Enable Rule</button>
+
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>

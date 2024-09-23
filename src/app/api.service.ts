@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import axios, { AxiosInstance } from 'axios';
-import {UpdateJsonFormValue} from "./app.interface";
+import {disableInterface, UpdateJsonFormValue} from "./app.interface";
 
 
 @Injectable({
@@ -38,7 +38,7 @@ export class ApiService {
     }
   }
 
-  async putApiCall(url: string, params: UpdateJsonFormValue): Promise<any> {
+  async putApiCall(url: string, params: UpdateJsonFormValue | disableInterface): Promise<any> {
     try {
       let response = await this.axios.put(url, params);
       return response['data'];

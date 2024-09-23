@@ -75,4 +75,13 @@ export interface ISingleInputStructure {
         previousValue: string;           
         updatedData: string;             
         updatedBy: string;
-      }
+}
+      
+export interface disableInterface{
+  groupRuleId: number | null,
+  ruleId: number |null
+  disableRuleGroup: number |null,
+  disableRule: number | null
+
+
+}

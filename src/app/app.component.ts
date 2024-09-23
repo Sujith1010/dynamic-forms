@@ -5,7 +5,7 @@ import {
   RuleGroupTableStructure,
 } from './dynamic-form/form.interface';
 import * as _ from 'lodash';
-import { IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
+import { disableInterface, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -102,6 +102,31 @@ export class AppComponent {
      alert("updated successfully")
     } else {
       console.log('Form is invalid');
+    }
+  }
+
+  async ruleStatusChange(ruleGroupName: string , ruleId: number | null, state:string ){
+    let matchedRuleGroup = this.ruleGroups[ruleGroupName] as UWRuleTableStructure[]
+    const ruleGroupId = matchedRuleGroup[0].uw_rule_group_id
+    try {
+      const apiPayload:disableInterface = {
+        groupRuleId: ruleGroupId,
+        ruleId: ruleId,
+        disableRuleGroup: state.trim().toLocaleLowerCase() == 'disable'? ruleGroupId ? 1 : 0 : ruleGroupId ? 0 : 1,
+        disableRule: state.trim().toLocaleLowerCase() == 'disable'? ruleId ? 1 : 0: ruleGroupId ? 0 : 1,
+      }
+      console.log(apiPayload)
+      let apiResponse = await this.apiService.putApiCall('group-rule/rule-status', apiPayload);
+      console.log("apiResponse", apiResponse)
+      if (apiResponse.statusCode == 200) {
+        console.log(`Successfully ${state}d the group`);
+      }
+      else {
+        console.log("Something went wrong");
+      }
+    }
+    catch (exception) {
+      console.log(exception)
     }
   }
 }
