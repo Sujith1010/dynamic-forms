@@ -5,8 +5,8 @@
       <section>
         <p class="group-rule-name">{{ ruleTitle }}</p>
         <div>
-          <button (click)="ruleStatusChange(ruleTitle, null, 'disable')"> Disable Group</button>
-          <button (click)="ruleStatusChange(ruleTitle, null, 'enable')"> Enable Group</button>
+          <button (click)="ruleStatusChange(ruleTitle, null, 'disable')" *ngIf="ruleGroups[ruleTitle][0].apply_rule_group"> Disable Group</button>
+          <button (click)="ruleStatusChange(ruleTitle, null, 'enable')" *ngIf="!ruleGroups[ruleTitle][0].apply_rule_group"> Enable Group</button>
       </div>
       </section>
       <div *ngFor="let formRules of ruleGroups[ruleTitle]" class="rule">
