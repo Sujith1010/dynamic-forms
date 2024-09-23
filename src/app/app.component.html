@@ -1,42 +1,54 @@
-<div *ngFor="let ruleTitle of groupRuleTypes">
-  <h2>{{ ruleTitle }}</h2>
-  <button (click)="ruleStatusChange(ruleTitle, null, 'disable')"> Disable Group</button>
-  <button (click)="ruleStatusChange(ruleTitle, null, 'enable')"> Enable Group</button>
-
-  <div *ngFor="let formRules of ruleGroups[ruleTitle]">
-    <form [formGroup]="dynamicForms[formRules.uw_rule_id]" (ngSubmit)="onSubmit(formRules.uw_rule_id)">
-      <div *ngFor="let formConfig of formRules.form_config; let i = index">
-        <div *ngIf="['text', 'number', 'textarea', 'radio', 'select'].includes(formConfig.type)">
-          <label>{{ formConfig.label }}</label>
-
-          <input *ngIf="formConfig.type !== 'textarea' && formConfig.type !== 'radio' && formConfig.type !== 'select'"
-                 [type]="formConfig.type"
-                 class="form-control"
-                 [formControlName]="formConfig.name" />
-
-          <textarea *ngIf="formConfig.type === 'textarea'"
+<div class="main">
+  <p class="header">UW Rules</p>
+  <div class="rule-div">
+    <div *ngFor="let ruleTitle of groupRuleTypes" class="rule-group-box">
+      <section>
+        <p class="group-rule-name">{{ ruleTitle }}</p>
+        <div>
+          <button (click)="ruleStatusChange(ruleTitle, null, 'disable')"> Disable Group</button>
+          <button (click)="ruleStatusChange(ruleTitle, null, 'enable')"> Enable Group</button>
+      </div>
+      </section>
+      <div *ngFor="let formRules of ruleGroups[ruleTitle]" class="rule">
+        <p class="form-name">{{formRules.form_name}}</p>
+        <form [formGroup]="dynamicForms[formRules.uw_rule_id]" (ngSubmit)="onSubmit(formRules.uw_rule_id)">
+          <div *ngFor="let formConfig of formRules.form_config; let i = index" class="group-entries">
+            <div *ngIf="['text', 'number', 'textarea', 'radio', 'select'].includes(formConfig.type)" class="form-entries">
+              <label >{{ formConfig.label }}</label>
+              <br>
+              <div class="input-box">
+              <input *ngIf="formConfig.type !== 'textarea' && formConfig.type !== 'radio' && formConfig.type !== 'select'"
+                    [type]="formConfig.type"
                     class="form-control"
-                    [formControlName]="formConfig.name"></textarea>
+                    [formControlName]="formConfig.name" />
 
-          <div *ngIf="formConfig.type === 'radio'">
-            <div *ngFor="let option of formConfig.options">
-              <label>
-                <input type="radio" [value]="option.value" [formControlName]="formConfig.name" />
-                {{ option.label }}
-              </label>
+              <textarea *ngIf="formConfig.type === 'textarea'"
+                        class="form-control"
+                        [formControlName]="formConfig.name"></textarea>
+
+              <div *ngIf="formConfig.type === 'radio'">
+                <div *ngFor="let option of formConfig.options">
+                  <label>
+                    <input type="radio" [value]="option.value" [formControlName]="formConfig.name" />
+                    {{ option.label }}
+                  </label>
+                </div>
+              </div>
+
+              <select *ngIf="formConfig.type === 'select'" [formControlName]="formConfig.name" class="form-control">
+                <option *ngFor="let option of formConfig.options" [value]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
             </div>
           </div>
-
-          <select *ngIf="formConfig.type === 'select'" [formControlName]="formConfig.name" class="form-control">
-            <option *ngFor="let option of formConfig.options" [value]="option.value">{{ option.label }}</option>
-          </select>
-
+          <div class="button-set">
+            <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'disable')" *ngIf="formRules.apply_rule">Disable Rule</button>
+            <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'enable')" *ngIf="!formRules.apply_rule">Enable Rule</button>
+          
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
+        </form>
       </div>
-      <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'disable')">Disable Rule</button>
-      <button (click)="ruleStatusChange(ruleTitle,formRules.uw_rule_id,'enable')">Enable Rule</button>
-
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
   </div>
 </div>

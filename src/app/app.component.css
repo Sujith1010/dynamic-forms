@@ -1,0 +1,88 @@
+.main{
+    font-size: 17px;
+    margin : 35px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.header{
+    font-size: 35px;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.rule-div{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+.rule-group-box{
+    background-color:#e8e5f0 ;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+    border-radius: 20px;
+}
+
+.rule-group-box>section{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.rule-group-box>section>div{
+    display: flex;
+    justify-items: stretch;
+    align-self: center;
+    gap: 10px;
+}
+
+.group-rule-name{
+    font-size: 25px !important;
+    font-weight: 900;
+
+}
+
+button{
+    background-color: #623eb8;
+    border-radius: 10px;
+    color:white;
+    padding: 10px;
+    border: none;
+    font-size: 17px;
+}
+
+input, select{
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+.form-entries{
+    margin:15px;
+}
+
+.form-control{
+    margin:10px 0px;
+}
+
+.button-set{
+    margin: 0px 30px;
+    display: flex;
+    justify-items: stretch;
+    align-self: center;
+    gap: 10px;
+}
+
+.rule{
+    margin:10px 0px
+}
+
+.form-name{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.group-entries{
+    margin: 0px 30px;
+}
