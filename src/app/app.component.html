@@ -52,3 +52,41 @@
     </div>
   </div>
 </div>
+
+<div class="main">
+  <div class="rule-group-box">
+    <label>Enter the number of members</label>
+    <input [(ngModel)]="memberCount" type="number" class="form-control" (ngModelChange)="updateEvaluateRuleData()">
+  </div>
+
+  <div class="rule-div">
+    <div class="rule-group-box" *ngFor="let member of getMembers(); let i = index">
+      <label>Age</label>
+      <input placeholder="Age" [(ngModel)]="evaluateRuleData[i].age">
+      <br/>
+      <label>Gender</label>
+      <select [(ngModel)]="evaluateRuleData[i].gender">
+        <option  value="female">Female</option>
+        <option  value="male">Male</option>
+      </select>
+      <br/>
+      <label>Nationality</label>
+      <select [(ngModel)]="evaluateRuleData[i].nationality">
+        <option  value="india">India</option>
+        <option  value="canada">Canada</option>
+        <option  value="usa">USA</option>
+      </select>
+      <br/>
+      <label>Benefits</label>
+      <select [(ngModel)]="evaluateRuleData[i].nationality">
+        <option  value="worldwide">World Wide</option>
+        <option  value="20%copay">20% Copay</option>
+        <option  value="sum150k">Sum Insured Above 150K</option>
+      </select>
+      <div>{{evaluateRuleData[i].gender}}</div>
+    </div>
+  </div>
+
+  <button (click)="evaluateRule()">Submit</button>
+</div>
+

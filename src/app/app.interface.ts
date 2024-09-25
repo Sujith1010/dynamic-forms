@@ -82,6 +82,11 @@ export interface disableInterface{
   ruleId: number |null
   disableRuleGroup: number |null,
   disableRule: number | null
+}
 
-
+export interface EvaluateInput{
+  age: number;
+  gender: string;
+  benefits: string[];
+  nationality: string;
 }

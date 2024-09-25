@@ -5,7 +5,7 @@ import {
   RuleGroupTableStructure,
 } from './dynamic-form/form.interface';
 import * as _ from 'lodash';
-import { disableInterface, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
+import { disableInterface, EvaluateInput, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -19,6 +19,8 @@ export class AppComponent {
   formStructure: ISingleInputStructure[] = [];
   dynamicForms: Record<string, FormGroup> = {}; // Dictionary to hold forms
   transformedRuleGroups: IruleParent = {};
+  memberCount: number = 0;
+  evaluateRuleData: EvaluateInput[] = [];
   JsonResponse:any;
   constructor(private apiService: ApiService, private fb: FormBuilder) {}
 
@@ -128,4 +130,49 @@ export class AppComponent {
       console.log(exception)
     }
   }
+
+  getMembers() {
+    return Array.from({ length: this.memberCount }, (_, i) => i);
+  }
+
+  updateEvaluateRuleData() {
+    // Ensure evaluateRuleData is initialized for each member
+    this.evaluateRuleData = Array.from({ length: this.memberCount }, () => ({ age: 0, gender: '', nationality:'', benefits:[]}));
+  }
+
+  async evaluateRule() {
+    let data: EvaluateInput[] = this.evaluateRuleData
+    if(!this.evaluateRuleData){
+     data  = [
+      {
+        age: 78,
+        gender: 'male',
+        benefits: ['worldwide', '20%copay'],
+        nationality: 'indian'
+      },
+      {
+        age: 30,
+        gender: 'male',
+        benefits: ['worldwide'],
+        nationality: 'india'
+      },
+      {
+        age: 30,
+        gender: 'female',
+        benefits: ['worldwide', '20%copay'],
+        nationality: 'canada'
+      },
+      {
+        age: 30,
+        gender: 'female',
+        benefits: ['20%copay'],
+        nationality: 'usa'
+      },
+      ]
+    }
+    const result =  await this.apiService.putApiCall('group-rule/eveluate-rule', data);
+    console.log(result)
+  }
+
+
 }
