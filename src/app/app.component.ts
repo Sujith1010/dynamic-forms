@@ -226,7 +226,7 @@ export class AppComponent {
     });
   }
 
-  async uploadUwRules(event: any, uwRuleId: string, fileInput:any) {
+  async uploadUwRules(event: any, uwRuleId: string, fileInput: any) {
     let formData = new FormData();
     if (!event.target.files) return;
     const file = event.target.files[0];
@@ -236,6 +236,19 @@ export class AppComponent {
       'group-rule/upload-table-config',
       formData
     );
-    fileInput = ''
+    fileInput = '';
+  }
+
+  async downloadFile(uwRuleId: string, downloadFileType: string) {
+    const data = { uwRuleId, downloadFileType };
+    console.log(data);
+
+    const urlResponse = await this.apiService.postApiCall(
+      'group-rule/dowload-file',
+      data
+    );
+    console.log(urlResponse.response[0][downloadFileType]);
+    window.open(urlResponse.response[0][downloadFileType], '_blank');
+
   }
 }
