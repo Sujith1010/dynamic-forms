@@ -5,8 +5,10 @@ import {
   RuleGroupTableStructure,
 } from './dynamic-form/form.interface';
 import * as _ from 'lodash';
-import { disableInterface, EvaluateInput, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
+import { disableInterface, EvaluateInput, IParsedFormConfig, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-root',
@@ -30,7 +32,7 @@ export class AppComponent {
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall('group-rule/josndriven');
     // console.log(apiResponse.response);
-    this.JsonResponse = apiResponse;
+    this.JsonResponse = apiResponse.response;
     this.ruleGroups = _.groupBy(
       apiResponse.response,
       'group_name'
@@ -44,9 +46,14 @@ export class AppComponent {
     this.groupRuleTypes.forEach((key) => {
       this.ruleGroups[key].forEach((rule: UWRuleTableStructure) => {
         let formGroup: Record<string, any> = {};
-        rule.form_config = JSON.parse(rule.form_config);
-        if (Array.isArray(rule.form_config)) {
-          rule.form_config.forEach((control) => {
+        let parsedFormConfig = JSON.parse(
+          rule.form_config as string
+        ) as IParsedFormConfig;
+        rule.form_config = parsedFormConfig;
+        console.log('rule.form_config', rule.form_config);
+        console.log('parsedFormConfig', parsedFormConfig);
+        if (Array.isArray(rule.form_config.uiRenderingFields)) {
+          rule.form_config.uiRenderingFields.forEach((control) => {
             let controlValidators: Validators[] = [];
             if (control.validations) {
               control.validations.forEach(
@@ -230,13 +237,14 @@ export class AppComponent {
     let formData = new FormData();
     if (!event.target.files) return;
     const file = event.target.files[0];
+    this.fileValidation(file, uwRuleId as unknown as number)
     formData.append('tableConfig', file);
     formData.append('uwRuleId', uwRuleId);
     await this.apiService.postApiCall(
       'group-rule/upload-table-config',
       formData
     );
-    fileInput = '';
+    fileInput.value = '';
   }
 
   async downloadFile(uwRuleId: string, downloadFileType: string) {
@@ -247,8 +255,56 @@ export class AppComponent {
       'group-rule/dowload-file',
       data
     );
-    console.log(urlResponse.response[0][downloadFileType]);
-    window.open(urlResponse.response[0][downloadFileType], '_blank');
+    console.log(urlResponse.response);
+    window.open(urlResponse.response.signedUrl, '_blank');
+  }
 
+  async fileValidation(file: File, uwRuleId: number) {
+    const matchingRule = this.JsonResponse.find(
+      (rule: UWRuleTableStructure) => rule.uw_rule_id == uwRuleId
+    );
+    const excelValidationColumns =
+      matchingRule.form_config.excelValidationColumns;
+    const dataInFile = await this.documentToJson(file);
+        console.log(matchingRule);
+        console.log(excelValidationColumns);
+        console.log(dataInFile);
+  }
+
+  async documentToJson(file:File) {
+    try {
+      return new Promise(function (resolve, reject) {
+        if (
+          file.type ==
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ) {
+          setTimeout(() => {
+            let a = file;
+            let fileReaderxlsx = new FileReader();
+            fileReaderxlsx.readAsArrayBuffer(a);
+            fileReaderxlsx.onload = async (_e) => {
+              let b: any = fileReaderxlsx.result;
+              var xlsxdata = new Uint8Array(b);
+              var array = new Array();
+              for (var i = 0; i != xlsxdata.length; ++i) {
+                array[i] = String.fromCharCode(xlsxdata[i]);
+              }
+
+              var bstr = array.join('');
+              var workbook = XLSX.read(bstr, {
+                type: 'binary',
+              });
+              var first_sheet_name = workbook.SheetNames[0];
+              var worksheet = workbook.Sheets[first_sheet_name];
+              let arraylis = XLSX.utils.sheet_to_json(worksheet);
+
+              resolve(arraylis);
+            };
+          }, 300);
+        }
+      });
+    } catch {
+      return null;
+    }
   }
 }

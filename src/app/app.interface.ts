@@ -52,20 +52,20 @@ export interface ISingleInputStructure {
     //   condition_structure :IConditionStructure[]
     // }
     export interface UWRuleTableStructure {
-    uw_rule_id: number
-    uw_rule_group_id :number
-    form_config: string
-    form_name:string
-    evaluation: any //SHOULD CHANGE
-    show_ui: number
-    apply_rule: number
-    outcome: string
-    loading_premium: string
-    factor: string
-    created_by: string|number
-    created_date: string
-          modified_date: string
-          group_name:string
+      uw_rule_id: number;
+      uw_rule_group_id: number;
+      form_config: string | IParsedFormConfig;
+      form_name: string;
+      evaluation: any; //SHOULD CHANGE
+      show_ui: number;
+      apply_rule: number;
+      outcome: string;
+      loading_premium: string;
+      factor: string;
+      created_by: string | number;
+      created_date: string;
+      modified_date: string;
+      group_name: string;
     }
 
 
@@ -89,4 +89,9 @@ export interface EvaluateInput{
   gender: string;
   benefits: string[];
   nationality: string;
+}
+
+export interface IParsedFormConfig {
+  excelValidationColumns: string[];
+  uiRenderingFields: ISingleInputStructure[];
 }
