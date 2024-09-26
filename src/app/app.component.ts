@@ -224,13 +224,15 @@ export class AppComponent {
   }
 
   async uploadUwRules(event:any) {
+    let formData = new FormData();
+    if(event.target.files.length) return;
     const file = event.target.files[0]
-    console.log(file);
-    const tableConfig = await this.convertToBuffer(file)
-    console.log(tableConfig);
+    console.log(file)
+    
+    formData.append("tableConfig",file)
           await this.apiService.postApiCall(
             'group-rule/upload-table-config',
-            tableConfig
+            formData
           );
   }
 }
