@@ -44,10 +44,19 @@ button{
     font-size: 17px;
 }
 
+.button{
+    background-color: #623eb8;
+    border-radius: 10px;
+    color:white;
+    padding: 10px;
+    border: none;
+    font-size: 17px;
+    text-align: center;
+}
 .file-upload{
     display: none;
 }
-/*
+
 .rule-group-box>section{
     display: flex;
     justify-content: space-between;
@@ -92,4 +101,12 @@ input, select{
 
 .group-entries{
     margin: 0px 30px;
-} */
+}
+
+.file-selector {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  left: 0px;
+  top: 0px;
+}

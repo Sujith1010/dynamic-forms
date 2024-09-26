@@ -54,7 +54,12 @@
               <div *ngIf="formConfig.type === 'file'">
                 <table >
                   <tr class="rule-div">
-                    <td> <input type = "file" #fileInput (change)="uploadUwRules($event,formRules.uw_rule_id, fileInput)"/>Upload Rules </td>
+                    <td>
+                      <div style="position: relative;" class="button" >
+                        Upload Rules
+                        <input type="file" class="file-selector" (change)="uploadUwRules($event,formRules.uw_rule_id, fileInput)" #fileInput />             
+                      </div>  
+                    </td>
                     <!-- column name of the data that has to be fetched is given as input -->
                     <td> <button  (click)="downloadFile(formRules.uw_rule_id, 'file_url')">Download Rules </button></td>
                     <td> <button  (click)="downloadFile(formRules.uw_rule_id, 'file_template_url')">Download Template</button></td>              
