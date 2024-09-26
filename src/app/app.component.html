@@ -98,9 +98,9 @@
           <table >
             <tr *ngFor="let formRules of ruleGroups[ruleTitle]" class="rule">
               <td  class="form-name">{{formRules.form_name}}</td>
-              <td> <input type = "file" (change)="uploadUwRules($event)"/>Upload Rules </td>
-              <td> <input type = "file" (change)="uploadUwRules($event)"/>Download Rules </td>
-              <td> <input type = "file" (change)="uploadUwRules($event)"/>Upload Template</td>              
+              <td> <input type = "file" #fileInput (change)="uploadUwRules($event,formRules.uw_rule_id)"/>Upload Rules </td>
+              <td> <input type = "file" (change)="uploadUwRules($event, formRules.uw_rule_id)"/>Download Rules </td>
+              <td> <input type = "file" (change)="uploadUwRules($event, formRules.uw_rule_id)"/>Upload Template</td>              
             </tr>
           </table>
       </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { ApiService } from './api.service';
 import {
   ISingleInputStructure,
@@ -22,6 +22,9 @@ export class AppComponent {
   memberCount: number = 0;
   evaluateRuleData: EvaluateInput[] = [];
   JsonResponse: any;
+
+  @ViewChild('fileInput') public fileInput!: TemplateRef<unknown>;
+
   constructor(private apiService: ApiService, private fb: FormBuilder) {}
 
   async ngOnInit() {
@@ -223,16 +226,16 @@ export class AppComponent {
     });
   }
 
-  async uploadUwRules(event:any) {
+  async uploadUwRules(event: any, uwRuleId: string, fileInput:any) {
     let formData = new FormData();
-    if(event.target.files.length) return;
-    const file = event.target.files[0]
-    console.log(file)
-    
-    formData.append("tableConfig",file)
-          await this.apiService.postApiCall(
-            'group-rule/upload-table-config',
-            formData
-          );
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+    formData.append('tableConfig', file);
+    formData.append('uwRuleId', uwRuleId);
+    await this.apiService.postApiCall(
+      'group-rule/upload-table-config',
+      formData
+    );
+    fileInput = ''
   }
 }
