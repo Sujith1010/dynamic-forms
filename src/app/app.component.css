@@ -15,6 +15,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
 }
+   
 .rule-group-box{
     background-color:#e8e5f0 ;
     padding: 35px;
@@ -24,6 +25,29 @@
     border-radius: 20px;
 }
 
+.form-name{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.group-rule-name{
+    font-size: 25px !important;
+    font-weight: 900;
+
+}
+button{
+    background-color: #623eb8;
+    border-radius: 10px;
+    color:white;
+    padding: 10px;
+    border: none;
+    font-size: 17px;
+}
+
+.file-upload{
+    display: none;
+}
+/*
 .rule-group-box>section{
     display: flex;
     justify-content: space-between;
@@ -37,20 +61,8 @@
     gap: 10px;
 }
 
-.group-rule-name{
-    font-size: 25px !important;
-    font-weight: 900;
 
-}
 
-button{
-    background-color: #623eb8;
-    border-radius: 10px;
-    color:white;
-    padding: 10px;
-    border: none;
-    font-size: 17px;
-}
 
 input, select{
     border: none;
@@ -78,11 +90,6 @@ input, select{
     margin:10px 0px
 }
 
-.form-name{
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .group-entries{
     margin: 0px 30px;
-}
+} */

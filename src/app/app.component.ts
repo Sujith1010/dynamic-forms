@@ -21,15 +21,13 @@ export class AppComponent {
   transformedRuleGroups: IruleParent = {};
   memberCount: number = 0;
   evaluateRuleData: EvaluateInput[] = [];
-  JsonResponse:any;
+  JsonResponse: any;
   constructor(private apiService: ApiService, private fb: FormBuilder) {}
-
-
 
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall('group-rule/josndriven');
     // console.log(apiResponse.response);
-    this.JsonResponse =apiResponse;
+    this.JsonResponse = apiResponse;
     this.ruleGroups = _.groupBy(
       apiResponse.response,
       'group_name'
@@ -47,7 +45,7 @@ export class AppComponent {
         if (Array.isArray(rule.form_config)) {
           rule.form_config.forEach((control) => {
             let controlValidators: Validators[] = [];
-            if (control.validations) { 
+            if (control.validations) {
               control.validations.forEach(
                 (validation: {
                   name: string;
@@ -87,47 +85,74 @@ export class AppComponent {
     return '';
   }
 
- async onSubmit(ruleId: number) {
+  async onSubmit(ruleId: number) {
     console.log(this.JsonResponse.response, ruleId);
     const form = this.dynamicForms[ruleId];
-    let previousJsonData:UWRuleTableStructure[]= this.JsonResponse?.response.filter((jsonData:UWRuleTableStructure)=>jsonData.uw_rule_id ==ruleId)
-    if (form.valid&&previousJsonData.length) {
-      let updateJsonFormValue:UpdateJsonFormValue = {
-        groupRuleId:previousJsonData[0].uw_rule_group_id,
-        uwRuleId:previousJsonData[0].uw_rule_id,
-        previousValue:JSON.stringify(previousJsonData[0].form_config),
-        updatedData:JSON.stringify(form.value),
-        updatedBy:"sujith"
-      }
-     await this.apiService.putApiCall("group-rule/update-rule-group",updateJsonFormValue);
-     alert("updated successfully")
+    let previousJsonData: UWRuleTableStructure[] =
+      this.JsonResponse?.response.filter(
+        (jsonData: UWRuleTableStructure) => jsonData.uw_rule_id == ruleId
+      );
+    if (form.valid && previousJsonData.length) {
+      let updateJsonFormValue: UpdateJsonFormValue = {
+        groupRuleId: previousJsonData[0].uw_rule_group_id,
+        uwRuleId: previousJsonData[0].uw_rule_id,
+        previousValue: JSON.stringify(previousJsonData[0].form_config),
+        updatedData: JSON.stringify(form.value),
+        updatedBy: 'sujith',
+      };
+      await this.apiService.putApiCall(
+        'group-rule/update-rule-group',
+        updateJsonFormValue
+      );
+      alert('updated successfully');
     } else {
       console.log('Form is invalid');
     }
   }
 
-  async ruleStatusChange(ruleGroupName: string , ruleId: number | null, state:string ){
-    let matchedRuleGroup = this.ruleGroups[ruleGroupName] as UWRuleTableStructure[]
-    const ruleGroupId = matchedRuleGroup[0].uw_rule_group_id
+  async ruleStatusChange(
+    ruleGroupName: string,
+    ruleId: number | null,
+    state: string
+  ) {
+    let matchedRuleGroup = this.ruleGroups[
+      ruleGroupName
+    ] as UWRuleTableStructure[];
+    const ruleGroupId = matchedRuleGroup[0].uw_rule_group_id;
     try {
-      const apiPayload:disableInterface = {
+      const apiPayload: disableInterface = {
         groupRuleId: ruleGroupId,
         ruleId: ruleId,
-        disableRuleGroup: state.trim().toLocaleLowerCase() == 'disable'? ruleGroupId ? 1 : 0 : ruleGroupId ? 0 : 1,
-        disableRule: state.trim().toLocaleLowerCase() == 'disable'? ruleId ? 1 : 0: ruleGroupId ? 0 : 1,
-      }
-      console.log(apiPayload)
-      let apiResponse = await this.apiService.putApiCall('group-rule/rule-status', apiPayload);
-      console.log("apiResponse", apiResponse)
+        disableRuleGroup:
+          state.trim().toLocaleLowerCase() == 'disable'
+            ? ruleGroupId
+              ? 1
+              : 0
+            : ruleGroupId
+            ? 0
+            : 1,
+        disableRule:
+          state.trim().toLocaleLowerCase() == 'disable'
+            ? ruleId
+              ? 1
+              : 0
+            : ruleGroupId
+            ? 0
+            : 1,
+      };
+      console.log(apiPayload);
+      let apiResponse = await this.apiService.putApiCall(
+        'group-rule/rule-status',
+        apiPayload
+      );
+      console.log('apiResponse', apiResponse);
       if (apiResponse.statusCode == 200) {
         console.log(`Successfully ${state}d the group`);
+      } else {
+        console.log('Something went wrong');
       }
-      else {
-        console.log("Something went wrong");
-      }
-    }
-    catch (exception) {
-      console.log(exception)
+    } catch (exception) {
+      console.log(exception);
     }
   }
 
@@ -137,42 +162,71 @@ export class AppComponent {
 
   updateEvaluateRuleData() {
     // Ensure evaluateRuleData is initialized for each member
-    this.evaluateRuleData = Array.from({ length: this.memberCount }, () => ({ age: 0, gender: '', nationality:'', benefits:[]}));
+    this.evaluateRuleData = Array.from({ length: this.memberCount }, () => ({
+      age: 0,
+      gender: '',
+      nationality: '',
+      benefits: [],
+    }));
   }
 
   async evaluateRule() {
-    let data: EvaluateInput[] = this.evaluateRuleData
-    if(!this.evaluateRuleData){
-     data  = [
-      {
-        age: 78,
-        gender: 'male',
-        benefits: ['worldwide', '20%copay'],
-        nationality: 'indian'
-      },
-      {
-        age: 30,
-        gender: 'male',
-        benefits: ['worldwide'],
-        nationality: 'india'
-      },
-      {
-        age: 30,
-        gender: 'female',
-        benefits: ['worldwide', '20%copay'],
-        nationality: 'canada'
-      },
-      {
-        age: 30,
-        gender: 'female',
-        benefits: ['20%copay'],
-        nationality: 'usa'
-      },
-      ]
+    let data: EvaluateInput[] = this.evaluateRuleData;
+    if (!this.evaluateRuleData) {
+      data = [
+        {
+          age: 78,
+          gender: 'male',
+          benefits: ['worldwide', '20%copay'],
+          nationality: 'indian',
+        },
+        {
+          age: 30,
+          gender: 'male',
+          benefits: ['worldwide'],
+          nationality: 'india',
+        },
+        {
+          age: 30,
+          gender: 'female',
+          benefits: ['worldwide', '20%copay'],
+          nationality: 'canada',
+        },
+        {
+          age: 30,
+          gender: 'female',
+          benefits: ['20%copay'],
+          nationality: 'usa',
+        },
+      ];
     }
-    const result =  await this.apiService.putApiCall('group-rule/eveluate-rule', data);
-    console.log(result)
+    const result = await this.apiService.putApiCall(
+      'group-rule/eveluate-rule',
+      data
+    );
+    console.log(result);
   }
 
+  async convertToBuffer(file: File) {
+    let bufferValue;
+    return new Promise((resolve, reject) => {
+      try {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = () => {
+          bufferValue = reader.result;
+          resolve(bufferValue);
+        };
+      } catch (exception) {
+        reject(exception);
+      }
+    });
+  }
 
+  async uploadUwRules(event:any) {
+    const file = event.target.files[0]
+    console.log(file)
+    const bufferValue = await this.convertToBuffer(file)
+    console.log(bufferValue)
+  }
 }

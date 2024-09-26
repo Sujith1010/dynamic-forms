@@ -1,4 +1,4 @@
-<div class="main">
+<!-- <div class="main">
   <p class="header">UW Rules</p>
   <div class="rule-div">
     <div *ngFor="let ruleTitle of groupRuleTypes" class="rule-group-box">
@@ -89,4 +89,19 @@
 
   <button (click)="evaluateRule()">Submit</button>
 </div>
+ -->
 
+ <div class="main">
+    <p class="header">UW Rules</p>
+      <div *ngFor="let ruleTitle of groupRuleTypes" class="rule-group-box">
+          <p class="group-rule-name">{{ ruleTitle }}</p>
+          <table >
+            <tr *ngFor="let formRules of ruleGroups[ruleTitle]" class="rule">
+              <td  class="form-name">{{formRules.form_name}}</td>
+              <td> <input type = "file" (change)="uploadUwRules($event)"/>Upload Rules </td>
+              <td> <input type = "file" (change)="uploadUwRules($event)"/>Download Rules </td>
+              <td> <input type = "file" (change)="uploadUwRules($event)"/>Upload Template</td>              
+            </tr>
+          </table>
+      </div>
+ </div>
