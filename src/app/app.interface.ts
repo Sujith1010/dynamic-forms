@@ -65,7 +65,9 @@ export interface ISingleInputStructure {
     created_by: string|number
     created_date: string
           modified_date: string
-          group_name:string
+      group_name: string
+      table_config: string
+      form_type:string
     }
 
 
@@ -89,4 +91,15 @@ export interface EvaluateInput{
   gender: string;
   benefits: string[];
   nationality: string;
+}
+
+export interface IDynamicTableHeader{
+  key: string,
+  index: number,
+  isSelected:boolean
+}
+
+export interface IDynamicTable {
+  headers: IDynamicTableHeader[];
+  data:any[]
 }

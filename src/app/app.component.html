@@ -54,6 +54,22 @@
 </div>
 
 <div class="main">
+  <p>Dynamic Table</p>
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let header of tableData.headers">{{header.key}}</th>  
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of tableData.data">
+        <td *ngFor="let header of tableData.headers">{{row[header.key]}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- <div class="main">
   <div class="rule-group-box">
     <label>Enter the number of members</label>
     <input [(ngModel)]="memberCount" type="number" class="form-control" (ngModelChange)="updateEvaluateRuleData()">
@@ -88,5 +104,5 @@
   </div>
 
   <button (click)="evaluateRule()">Submit</button>
-</div>
+</div> -->
 

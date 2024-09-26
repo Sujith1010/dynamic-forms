@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ApiService } from './api.service';
 import {
   ISingleInputStructure,
   RuleGroupTableStructure,
 } from './dynamic-form/form.interface';
 import * as _ from 'lodash';
-import { disableInterface, EvaluateInput, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
+import { disableInterface, EvaluateInput, IDynamicTable, IDynamicTableHeader, IruleParent, RuleGroup, UpdateJsonFormValue, UWRuleTableStructure } from './app.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit{
   ruleGroups!: any;
   groupRuleTypes: string[] = [];
   formStructure: ISingleInputStructure[] = [];
@@ -21,10 +21,15 @@ export class AppComponent {
   transformedRuleGroups: IruleParent = {};
   memberCount: number = 0;
   evaluateRuleData: EvaluateInput[] = [];
-  JsonResponse:any;
-  constructor(private apiService: ApiService, private fb: FormBuilder) {}
+  JsonResponse: any;
+  
 
+  //Dynamic Table Variables
+  tableData:IDynamicTable = {headers:[], data:[]}
+  allHeaders :IDynamicTableHeader[]= []
 
+  constructor(private apiService: ApiService, private fb: FormBuilder) { }
+  
 
   async ngOnInit() {
     let apiResponse = await this.apiService.getApiCall('group-rule/josndriven');
@@ -47,7 +52,7 @@ export class AppComponent {
         if (Array.isArray(rule.form_config)) {
           rule.form_config.forEach((control) => {
             let controlValidators: Validators[] = [];
-            if (control.validations) { 
+            if (control.validations) {
               control.validations.forEach(
                 (validation: {
                   name: string;
@@ -63,13 +68,38 @@ export class AppComponent {
             }
             formGroup[control.name] = [control.value || '', controlValidators];
           });
-
           this.dynamicForms[rule.uw_rule_id] = this.fb.group(formGroup);
+
+          //Dynamic Table Rendering
+          this.tableData = { headers: [], data: [] };
+          this.allHeaders = []
         }
       });
     });
     this.transformedRuleGroups = this.ruleGroups;
     console.log('dynamicForm', this.dynamicForms);
+
+
+  }
+
+  ngAfterViewInit(): void {
+    this.groupRuleTypes.forEach((key) => {
+      this.ruleGroups[key].forEach((rule: UWRuleTableStructure) => {
+        if (Array.isArray(rule.form_config)) {
+          //Dynamic Table Rendering
+          const parsedTableConfig = JSON.parse(rule.table_config);
+          console.log(parsedTableConfig, '---parsedTableConfig');
+          const headersArray = parsedTableConfig.columns as Array<string>;
+          const tableBody = parsedTableConfig.data;
+          console.log('headersArray', headersArray);
+          console.log('tableBody', tableBody);
+          const headersForTable = headersArray.map(
+            (header, index) => ({ key: header, index } as IDynamicTableHeader)
+          );
+          this.renderTable(headersForTable, tableBody);
+        }
+      });
+    });
   }
   getErrorMessage(control: any) {
     const formGroup = this.dynamicForms[control.uw_rule_group_id];
@@ -174,5 +204,12 @@ export class AppComponent {
     console.log(result)
   }
 
-
+  
+  renderTable(headers: IDynamicTableHeader[], data: any[]) {
+    this.tableData = {
+      headers: headers.filter(header => header.isSelected),
+      data:data
+    }
+    this.allHeaders = headers
+  }
 }
