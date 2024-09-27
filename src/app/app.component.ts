@@ -237,7 +237,12 @@ export class AppComponent {
     let formData = new FormData();
     if (!event.target.files) return;
     const file = event.target.files[0];
-    this.fileValidation(file, uwRuleId as unknown as number)
+    const valid = await this.fileValidation(file, uwRuleId as unknown as number)
+    console.log(valid, "-------------vlaid")
+    if (!valid) {
+      alert("File Invalid")
+      return
+    }
     formData.append('tableConfig', file);
     formData.append('uwRuleId', uwRuleId);
     await this.apiService.postApiCall(
@@ -263,12 +268,18 @@ export class AppComponent {
     const matchingRule = this.JsonResponse.find(
       (rule: UWRuleTableStructure) => rule.uw_rule_id == uwRuleId
     );
-    const excelValidationColumns =
-      matchingRule.form_config.excelValidationColumns;
-    const dataInFile = await this.documentToJson(file);
-        console.log(matchingRule);
-        console.log(excelValidationColumns);
-        console.log(dataInFile);
+    const excelValidationColumns = matchingRule.form_config.excelValidationColumns;
+    let valid = true
+    const dataInFile: any = await this.documentToJson(file);
+    console.log(excelValidationColumns);
+    console.log(dataInFile)
+    dataInFile.forEach((entry:any) => {
+      excelValidationColumns.forEach((columnName: string) => {
+        console.log(entry[columnName.trim().toLowerCase()]);
+        if(!entry[columnName.trim().toLowerCase()]) valid = false
+      })
+    })
+    return valid
   }
 
   async documentToJson(file:File) {
